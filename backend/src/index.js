@@ -18,7 +18,7 @@ mongoose.connect('mongodb://localhost/instaMalbos', {useNewUrlParser: true});
 app.use((req, res, next) => {
     req.io = io;
 
-    next();
+    next(); 
 });
 
 app.use(cors());
