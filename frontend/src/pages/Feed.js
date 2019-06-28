@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import api from '../services/api';
 
 import './Feed.css';
 
@@ -8,67 +9,50 @@ import comment from '../assets/comment.svg';
 import send from '../assets/send.svg';
 
 class Feed extends Component {
+    state = {
+        feed: [],
+    };
+
+    async componentDidMount() {
+        const response = await api.get('posts');
+
+        this.setState({ feed: response.data.posts });
+    }
+
     render() {
         return (
             <section id="post-list">
-                <article>
-                    <header>
-                        <div className="user-info">
-                            <span>Alan Malbos</span>
-                            <span className="place">New York</span>
-                        </div>
-                        <img src={more} alt="More" />
-                    </header>
+                {console.log(this.state.feed)}
+                {   this.state.feed.map(post => (
+                        <article>
+                            <header>
+                                <div className="user-info">
+                                    <span>{ post.author }</span>
+                                    <span className="place">{ post.place }</span>
+                                </div>
+                                <img src={more} alt="More" />
+                            </header>
 
-                    <img src="http://localhost:3333/files/new_york.jpg" alt="" />
+                            <img src={'http://localhost:3333/files/' + post.image } alt="" />
 
-                    <footer>
-                        <div className="actions">
-                            <img src={like} alt="Like" />
-                            <img src={comment} alt="Comment" />
-                            <img src={send} alt="Send" />
-                        </div>
+                            <footer>
+                                <div className="actions">
+                                    <img src={like} alt="Like" />
+                                    <img src={comment} alt="Comment" />
+                                    <img src={send} alt="Send" />
+                                </div>
 
-                        <strong>900 likes</strong>
-                        <p>
-                            Great trip to New York!!!
-                            <span>
-                                #new_york
-                                #trip
-                                #USA
-                            </span>
-                        </p>
-                    </footer>
-                </article>
-                <article>
-                    <header>
-                        <div className="user-info">
-                            <span>Alan Malbos</span>
-                            <span className="place">New York</span>
-                        </div>
-                        <img src={more} alt="More" />
-                    </header>
-
-                    <img src="http://localhost:3333/files/new_york.jpg" alt="" />
-
-                    <footer>
-                        <div className="actions">
-                            <img src={like} alt="Like" />
-                            <img src={comment} alt="Comment" />
-                            <img src={send} alt="Send" />
-                        </div>
-
-                        <strong>900 likes</strong>
-                        <p>
-                            Great trip to New York!!!
-                            <span>
-                                #new_york
-                                #trip
-                                #USA
-                            </span>
-                        </p>
-                    </footer>
-                </article>
+                                <strong>{ post.likes } likes</strong>
+                                <p>
+                                    { post.description }
+                                    <span>
+                                        { post.hashtags}
+                                    </span>
+                                </p>
+                            </footer>
+                        </article>
+                ))  }
+                
             </section>
         );
     }
